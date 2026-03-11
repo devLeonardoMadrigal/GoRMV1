@@ -1,14 +1,21 @@
 package com.example.gormv1.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -19,75 +26,104 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun LoginScreen(){
-    Column (
-        modifier = Modifier.fillMaxSize().safeContentPadding()
-    ){
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Text("GoRMV")
-        }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Text("Move cargo, grow business")
-        }
-        Row(modifier = Modifier.fillMaxWidth()) {
+    var passwordField by remember { mutableStateOf("") }
+    var emailField by remember { mutableStateOf("") }
+    var keepSignedIn by remember { mutableStateOf(true) }
 
-            val emailField by remember { mutableStateOf("") }
+    Column (
+        modifier = Modifier.fillMaxSize()
+    ){
+        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
+            Text(
+                text = "GoRMV",
+                fontSize = 42.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(37,99,235)
+            )
+        }
+        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
+            Text(
+                text = "Move cargo, grow business",
+                fontSize = 27.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(100,116,139)
+            )
+        }
+        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
 
             Column {
-                Text("Email")
+                Text("Email", fontSize = 24.sp, fontWeight = FontWeight.Medium)
                 OutlinedTextField(
-                    state = TextFieldState(
-                        initialText = emailField
-                    ),
+                    value = emailField,
+                    onValueChange =  {emailField = it},
                     modifier = Modifier.fillMaxWidth(),
                 )
 
             }
         }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            var passwordField by remember { mutableStateOf("") }
+        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp)) {
 
             Column {
-                Text("Password")
+                Text("Password", fontSize = 24.sp, fontWeight = FontWeight.Medium)
                 OutlinedTextField(
                     visualTransformation = PasswordVisualTransformation(),
-
-                    singleLine = true,
                     onValueChange =  {passwordField = it},
                     value = passwordField,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = {}){
-                Text("Log in", fontSize = 24.sp)
+        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp), horizontalArrangement = Arrangement.Center) {
+            Button(onClick = {},
+                modifier = Modifier.fillMaxWidth().size(72.dp), colors = ButtonColors(
+                containerColor =  Color(37,99,235),
+                contentColor = Color.White,
+                disabledContentColor = Color.Gray,
+                disabledContainerColor = Color.LightGray
+            )){
+                Text("Log in", fontSize = 36.sp)
             }
         }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            var keepSignedIn by remember { mutableStateOf(true) }
-            Row {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row (modifier = Modifier, verticalAlignment = Alignment.CenterVertically){
                 Checkbox(
                     checked = keepSignedIn,
                     onCheckedChange = {keepSignedIn = !keepSignedIn},
                 )
-                Text("Keep me signed in")
+                Text("Keep me signed in", fontSize = 18.sp)
             }
             TextButton(onClick = {}){
-                Text("Forgot password?")
+                Text("Forgot password?", fontSize = 18.sp)
             }
 
         }
-        Row(modifier = Modifier.fillMaxWidth()) {
-                Text("New to GoRMV?")
-            TextButton(onClick = {}){
-                Text("Create new account")
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically){
+                Text("New to GoRMV?",fontSize = 24.sp)
+                Spacer(Modifier.size(21.dp))
+                TextButton(onClick = {}){
+                    Text("Create new account", fontSize = 21.sp)
+                }
             }
         }
     }
