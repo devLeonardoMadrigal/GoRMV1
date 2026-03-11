@@ -34,12 +34,19 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gormv1.utils.validateLogin
 
 @Composable
-fun LoginScreen(){
+fun LoginScreen(onNavigateToHomeScreen: () -> Unit){
     var passwordField by remember { mutableStateOf("") }
     var emailField by remember { mutableStateOf("") }
     var keepSignedIn by remember { mutableStateOf(true) }
+
+    var isValidEmail by remember {mutableStateOf(false)}
+    var isValidPassword by remember {mutableStateOf(false)}
+
+    var hasFailedToLogInOnce by remember { mutableStateOf(false) }
+
 
     Column (
         modifier = Modifier.fillMaxSize()
@@ -61,15 +68,16 @@ fun LoginScreen(){
             )
         }
         Row(modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
-
             Column {
                 Text("Email", fontSize = 24.sp, fontWeight = FontWeight.Medium)
                 OutlinedTextField(
                     value = emailField,
-                    onValueChange =  {emailField = it},
+                    onValueChange =  {
+                        emailField = it
+                        isValidEmail = emailField.length > 0
+                                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
-
             }
         }
         Row(modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp)) {
@@ -78,23 +86,40 @@ fun LoginScreen(){
                 Text("Password", fontSize = 24.sp, fontWeight = FontWeight.Medium)
                 OutlinedTextField(
                     visualTransformation = PasswordVisualTransformation(),
-                    onValueChange =  {passwordField = it},
+                    onValueChange =  {passwordField = it
+                        isValidPassword = passwordField.length > 0
+                    },
                     value = passwordField,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
         Row(modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp), horizontalArrangement = Arrangement.Center) {
-            Button(onClick = {},
-                modifier = Modifier.fillMaxWidth().size(72.dp), colors = ButtonColors(
+            Button(
+                onClick = {
+                    if(validateLogin(emailField, passwordField)){
+                        onNavigateToHomeScreen()
+                    } else{
+                        hasFailedToLogInOnce = true
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().size(72.dp),
+                colors = ButtonColors(
                 containerColor =  Color(37,99,235),
                 contentColor = Color.White,
                 disabledContentColor = Color.Gray,
-                disabledContainerColor = Color.LightGray
-            )){
+                disabledContainerColor = Color.LightGray),
+                enabled = (isValidEmail && isValidPassword)
+            ){
                 Text("Log in", fontSize = 36.sp)
             }
         }
+        if(hasFailedToLogInOnce) {
+            Row {
+                Text("Only user allowed to log in is \"leo@leo.com/1234\"")
+            }
+        }
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -119,10 +144,10 @@ fun LoginScreen(){
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically){
-                Text("New to GoRMV?",fontSize = 24.sp)
-                Spacer(Modifier.size(21.dp))
+                Text("New to GoRMV?",fontSize = 18.sp)
+                Spacer(Modifier.size(10.dp))
                 TextButton(onClick = {}){
-                    Text("Create new account", fontSize = 21.sp)
+                    Text("Create new account", fontSize = 18.sp)
                 }
             }
         }

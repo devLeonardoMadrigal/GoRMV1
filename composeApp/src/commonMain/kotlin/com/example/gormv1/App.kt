@@ -16,16 +16,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.gormv1.ui.HomeScreen
 import com.example.gormv1.ui.LoginScreen
-import org.jetbrains.compose.resources.painterResource
+import kotlinx.serialization.Serializable
 
-import gormv1.composeapp.generated.resources.Res
-import gormv1.composeapp.generated.resources.compose_multiplatform
+
+@Serializable
+object LoginScreenRoute
+
+@Serializable
+object HomeScreenRoute
 
 @Composable
-@Preview
 fun App() {
     MaterialTheme {
+
+        val navController = rememberNavController()
+
+
+
         Column(
             modifier = Modifier
                 .background(Color.White)
@@ -33,7 +45,13 @@ fun App() {
                 .safeContentPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LoginScreen()
+            NavHost(
+                navController = navController,
+                startDestination = LoginScreenRoute,
+            ){
+                composable<LoginScreenRoute>{ LoginScreen(onNavigateToHomeScreen = {navController.navigate(HomeScreenRoute)})}
+                composable<HomeScreenRoute> { HomeScreen(onNavigateToLoginScreen = {navController.navigate(LoginScreenRoute)}) }
+            }
         }
     }
 }
